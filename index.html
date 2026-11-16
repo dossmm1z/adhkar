@@ -13,12 +13,6 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="الأذكار">
 <link rel="stylesheet" href="fonts.css">
-<script>
-try {
-  var th = localStorage.getItem("adhkar-theme");
-  if (th === "light" || th === "dark") document.documentElement.setAttribute("data-theme", th);
-} catch (e) {}
-</script>
 <style>
 :root {
   --bg: #EDF2F1;
@@ -44,45 +38,6 @@ try {
   --f-quran: "Amiri Quran", "Amiri", "Traditional Arabic", serif;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0D191E;
-    --card: #15262D;
-    --fg: #E7F0EF;
-    --muted: #C5D6DA;
-    --line: #264049;
-    --morning: #E6A94A;
-    --on-morning: #1B1204;
-    --evening: #8EA8F2;
-    --on-evening: #0C1330;
-    --selected: #7CC4A0;
-    --on-selected: #0A1F15;
-    --karb: #C9A0DC;
-    --on-karb: #1F0F28;
-    --qiyam: #6FC3E0;
-    --on-qiyam: #08202B;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0D191E;
-  --card: #15262D;
-  --fg: #E7F0EF;
-  --muted: #C5D6DA;
-  --line: #264049;
-  --morning: #E6A94A;
-  --on-morning: #1B1204;
-  --evening: #8EA8F2;
-  --on-evening: #0C1330;
-  --selected: #7CC4A0;
-  --on-selected: #0A1F15;
-  --karb: #C9A0DC;
-  --on-karb: #1F0F28;
-  --qiyam: #6FC3E0;
-  --on-qiyam: #08202B;
-  color-scheme: dark;
-}
-:root[data-theme="light"] { color-scheme: light; }
 
 html { box-sizing: border-box; height: 100%; }
 *, *::before, *::after { box-sizing: inherit; }
@@ -159,25 +114,24 @@ button { font: inherit; color: inherit; }
 
 .stage { position: relative; flex: 1; min-height: 0; }
 .list {
-  direction: rtl;
+  direction: ltr;
   height: 100%;
-  display: flex;
-  gap: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  overscroll-behavior-x: contain;
-  touch-action: pan-x;
+  overflow: hidden;
+  touch-action: none;
 }
-.list::-webkit-scrollbar { display: none; }
+.track {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  will-change: transform;
+}
 .card {
+  direction: rtl;
   flex: 0 0 100%;
   width: 100%;
   height: 100%;
   min-height: 0;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  touch-action: none;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -290,22 +244,30 @@ button { font: inherit; color: inherit; }
   color: var(--fg);
   cursor: default;
 }
-.acts { display: flex; flex-wrap: nowrap; gap: 6px; }
-.act {
+.bottom {
+  flex: none;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  padding-top: 6px;
+}
+.bottom button {
   flex: 1 1 0;
-  min-height: 44px;
-  padding: 4px 4px;
+  min-width: 0;
+  min-height: 34px;
+  padding: 2px 0;
   border: 1px solid var(--line);
-  border-radius: 12px;
-  background: transparent;
+  border-radius: 10px;
+  background: var(--card);
   color: var(--fg);
-  font-weight: 600;
-  font-size: .8rem;
-  line-height: 1.15;
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 1.1;
+  white-space: nowrap;
   cursor: pointer;
   touch-action: manipulation;
 }
-.act:disabled { opacity: .4; cursor: default; }
+.bottom button:disabled { opacity: .4; cursor: default; }
 .card.end .text { font-size: 1.35rem; }
 
 .tools {
@@ -440,15 +402,6 @@ button { font: inherit; color: inherit; }
       <div class="track"><i id="bar"></i></div>
       <span id="prog-txt"></span>
     </div>
-    <p id="when-note" class="when"></p>
-    <div class="tools">
-      <button type="button" id="t-minus" aria-label="تصغير الخط">أ −</button>
-      <button type="button" id="t-plus" aria-label="تكبير الخط">أ +</button>
-      <button type="button" id="t-auto" aria-pressed="true">تقدّم تلقائي</button>
-      <button type="button" id="t-index" aria-expanded="false">الفهرس</button>
-      <button type="button" id="t-theme" aria-pressed="false">الوضع الليلي</button>
-      <button type="button" id="t-reset">إعادة القسم</button>
-    </div>
     <div class="nav-row">
       <button type="button" id="nav-prev">السابق</button>
       <button type="button" id="nav-next">التالي</button>
@@ -457,15 +410,13 @@ button { font: inherit; color: inherit; }
   <div class="stage">
     <div class="list" id="car" aria-label="الأذكار" tabindex="0"></div>
   </div>
-</div>
-
-<div id="sheet" class="sheet" hidden>
-  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
-    <div class="sheet-head">
-      <h2 id="sheet-title">الفهرس</h2>
-      <button type="button" id="sheet-close">إغلاق</button>
-    </div>
-    <ul class="sheet-list" id="sheet-list"></ul>
+  <div class="bottom" id="bottom">
+    <button type="button" id="t-minus" aria-label="تصغير الخط">أ−</button>
+    <button type="button" id="t-plus" aria-label="تكبير الخط">أ+</button>
+    <button type="button" id="b-undo">تراجع</button>
+    <button type="button" id="b-reset">إعادة</button>
+    <button type="button" id="b-copy">نسخ</button>
+    <button type="button" id="b-share">مشاركة</button>
   </div>
 </div>
 <div id="toast" class="toast" hidden role="status"></div>
@@ -1013,23 +964,12 @@ button { font: inherit; color: inherit; }
     if (asr) return { mode: now < asr ? "m" : "e", how: "asr", asr: asr };
     return { mode: now.getHours() < 15 ? "m" : "e", how: "hour", asr: null };
   }
-  function paintWhen(info) {
-    var el = document.getElementById("when-note");
-    if (!el) return;
-    if (info.how === "asr") {
-      el.textContent = (info.mode === "m" ? "صباح حتى العصر " : "مساء بعد العصر ") + two(info.asr.getHours()) + ":" + two(info.asr.getMinutes()) + " (أم القرى)";
-    } else {
-      el.textContent = "قبل الثالثة عصرًا: صباح، وبعدها: مساء";
-    }
-  }
-
   var userPicked = false;
   var info0 = clockInfo();
   var mode = info0.mode;
   var list = [], cards = [], cur = 0;
   var car = document.getElementById("car");
   var smooth = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
-  var sheet = document.getElementById("sheet");
 
   function el(tag, cls, txt) {
     var n = document.createElement(tag);
@@ -1074,12 +1014,15 @@ button { font: inherit; color: inherit; }
     } else fallback();
   }
 
+  var track = null;
   function build() {
     list = ITEMS.filter(function (it) {
       return it.when === mode || ((mode === "m" || mode === "e") && it.when === "b");
     });
+    moreWatchers = [];
     car.textContent = "";
     cards = [];
+    track = el("div", "track");
     var total = list.length;
 
     list.forEach(function (it, i) {
@@ -1120,42 +1063,22 @@ button { font: inherit; color: inherit; }
       read.appendChild(fade);
       card.appendChild(read);
       watchMore(scroller, fade);
-      bindDirectionLock(scroller);
 
       var foot = el("div", "foot");
       var mini = el("div", "mini"); mini.appendChild(document.createElement("i"));
       var btn = el("button", "count"); btn.type = "button";
       btn.appendChild(el("span", "lbl")); btn.appendChild(el("span", "num"));
-      var acts = el("div", "acts");
-      var undo = el("button", "act", "تراجع"); undo.type = "button"; undo.setAttribute("data-stop", "");
-      var reset = el("button", "act", "إعادة الذكر"); reset.type = "button"; reset.setAttribute("data-stop", "");
-      var copy = el("button", "act", "نسخ"); copy.type = "button"; copy.setAttribute("data-stop", "");
-      var share = el("button", "act", "مشاركة"); share.type = "button"; share.setAttribute("data-stop", "");
-      acts.appendChild(undo); acts.appendChild(reset); acts.appendChild(copy); acts.appendChild(share);
-      foot.appendChild(mini); foot.appendChild(btn); foot.appendChild(acts);
+      foot.appendChild(mini); foot.appendChild(btn);
       card.appendChild(foot);
 
       card.addEventListener("click", function (e) {
         if (ignoreClick) return;
-        if (e.target.closest("[data-stop]")) return;
+        if (e.target.closest("button")) return;
         if (window.getSelection && String(window.getSelection())) return;
         tap(it, i);
       });
-      undo.addEventListener("click", function (e) { e.stopPropagation(); untap(it); });
-      reset.addEventListener("click", function (e) { e.stopPropagation(); resetItem(it); });
-      copy.addEventListener("click", function (e) { e.stopPropagation(); copyText(plain(it)); });
-      share.addEventListener("click", function (e) {
-        e.stopPropagation();
-        var text = plain(it);
-        if (navigator.share) {
-          navigator.share({ title: it.title, text: text }).catch(function (err) {
-            if (err && err.name === "AbortError") return;
-            copyText(text);
-          });
-        } else copyText(text);
-      });
 
-      car.appendChild(card);
+      track.appendChild(card);
       cards.push(card);
       paint(i);
     });
@@ -1173,9 +1096,11 @@ button { font: inherit; color: inherit; }
     eb.appendChild(el("span", "num", "أول ذكر ناقص"));
     eb.addEventListener("click", function () { go(firstOpen(), true); });
     end.appendChild(eb);
-    car.appendChild(end);
+    track.appendChild(end);
+    car.appendChild(track);
     cards.push(end);
     progress();
+    paintBar();
   }
 
   function paint(i) {
@@ -1183,14 +1108,10 @@ button { font: inherit; color: inherit; }
     if (!it || !card) return;
     var d = doneOf(it), fin = d >= it.count;
     var btn = card.querySelector(".count");
-    var undo = card.querySelector(".acts .act");
-    var reset = card.querySelectorAll(".acts .act")[1];
     var lbl = btn.querySelector(".lbl"), num = btn.querySelector(".num");
     card.classList.toggle("done", fin);
     card.querySelector(".mini i").style.width = (d / it.count * 100) + "%";
     btn.disabled = fin;
-    undo.disabled = d === 0;
-    reset.disabled = d === 0;
     if (fin) {
       lbl.textContent = ""; lbl.hidden = true; num.textContent = "✓ تمّت";
     } else if (it.count === 1) {
@@ -1228,28 +1149,53 @@ button { font: inherit; color: inherit; }
     requestAnimationFrame(upd);
   }
   function refreshMore() { moreWatchers.forEach(function (fn) { fn(); }); }
-  function bindDirectionLock(scroller) {
-    var sx = 0, sy = 0, dx = 0, dy = 0, lock = null;
-    scroller.addEventListener("touchstart", function (e) {
+  /* Cards are laid out left-to-right in an LTR track. Showing index i means
+     translating the track left by i widths. Finger movement is measured only
+     from clientX, so the direction does not depend on RTL scrollLeft. */
+  function place(px, animate) {
+    if (!track) return;
+    track.style.transition = animate && smooth ? "transform .28s ease" : "none";
+    track.style.transform = "translate3d(" + (-px) + "px,0,0)";
+  }
+  function go(i, sm) {
+    i = Math.max(0, Math.min(cards.length - 1, i));
+    cur = i;
+    place(i * (car.clientWidth || 0), !!sm);
+    paintNav();
+    paintBar();
+  }
+  function bindSwipe() {
+    var sx = 0, sy = 0, dx = 0, dy = 0, lock = null, active = false;
+    car.addEventListener("touchstart", function (e) {
       if (!e.touches || e.touches.length !== 1) return;
       sx = e.touches[0].clientX;
       sy = e.touches[0].clientY;
-      dx = 0; dy = 0; lock = null;
+      dx = 0; dy = 0; lock = null; active = true;
     }, { passive: true });
-    scroller.addEventListener("touchmove", function (e) {
-      if (!e.touches || e.touches.length !== 1) return;
+    car.addEventListener("touchmove", function (e) {
+      if (!active || !e.touches || e.touches.length !== 1) return;
       dx = e.touches[0].clientX - sx;
       dy = e.touches[0].clientY - sy;
       if (!lock && (Math.abs(dx) > 10 || Math.abs(dy) > 10)) {
         lock = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
       }
-      if (lock === "x" && e.cancelable) e.preventDefault();
+      if (lock !== "x") return;
+      if (e.cancelable) e.preventDefault();
+      var w = car.clientWidth || 1;
+      var max = Math.max(0, cards.length - 1) * w;
+      var raw = cur * w - dx;
+      if (raw < 0) raw *= 0.35;
+      if (raw > max) raw = max + (raw - max) * 0.35;
+      place(raw, false);
     }, { passive: false });
     function finish() {
-      if (lock === "x" && Math.abs(dx) > 48) {
-        /* RTL, same as the old carousel: finger toward the left opens the next card. */
-        if (dx < 0) go(cur + 1, true);
-        else go(cur - 1, true);
+      if (!active) return;
+      active = false;
+      if (lock === "x") {
+        /* dx < 0: finger moved right-to-left → next. dx > 0 → previous. */
+        if (dx <= -48) go(cur + 1, true);
+        else if (dx >= 48) go(cur - 1, true);
+        else go(cur, true);
       }
       if (lock) {
         ignoreClick = true;
@@ -1257,25 +1203,8 @@ button { font: inherit; color: inherit; }
       }
       lock = null;
     }
-    scroller.addEventListener("touchend", finish);
-    scroller.addEventListener("touchcancel", finish);
-  }
-  function go(i, sm) {
-    i = Math.max(0, Math.min(cards.length - 1, i));
-    cur = i;
-    var card = cards[i];
-    if (!card) return;
-    var left = card.offsetLeft;
-    car.scrollTo({ left: left, behavior: sm && smooth ? "smooth" : "auto" });
-    paintNav();
-  }
-  function updateCur() {
-    var w = car.clientWidth || 1;
-    var i = Math.round(Math.abs(car.scrollLeft) / w);
-    if (i < 0) i = 0;
-    if (i > cards.length - 1) i = cards.length - 1;
-    cur = i;
-    paintNav();
+    car.addEventListener("touchend", finish);
+    car.addEventListener("touchcancel", finish);
   }
   function paintNav() {
     var prev = document.getElementById("nav-prev");
@@ -1290,21 +1219,37 @@ button { font: inherit; color: inherit; }
     if (d >= it.count) return;
     storeOf(it)[it.id] = d + 1;
     save(); paint(i); progress();
-    if (d + 1 >= it.count) {
-      buzz([12, 40, 12]);
-      if (S.auto) setTimeout(function () { if (cur === i) go(i + 1, true); }, 380);
-    } else buzz(12);
+    if (d + 1 >= it.count) buzz([12, 40, 12]);
+    else buzz(12);
+    paintBar();
   }
   function untap(it) {
     var d = doneOf(it);
     if (d <= 0) return;
     storeOf(it)[it.id] = d - 1;
-    save(); paint(list.indexOf(it)); progress();
+    save(); paint(list.indexOf(it)); progress(); paintBar();
   }
   function resetItem(it) {
     storeOf(it)[it.id] = 0;
-    save(); paint(list.indexOf(it)); progress();
+    save(); paint(list.indexOf(it)); progress(); paintBar();
   }
+  function paintBar() {
+    var it = list[cur];
+    var undo = document.getElementById("b-undo");
+    var reset = document.getElementById("b-reset");
+    var copy = document.getElementById("b-copy");
+    var share = document.getElementById("b-share");
+    if (!it) {
+      undo.disabled = reset.disabled = copy.disabled = share.disabled = true;
+      return;
+    }
+    var d = doneOf(it);
+    undo.disabled = d === 0;
+    reset.disabled = d === 0;
+    copy.disabled = false;
+    share.disabled = false;
+  }
+  function currentItem() { return list[cur] || null; }
 
   function setMode(m, startAt) {
     mode = m;
@@ -1313,13 +1258,7 @@ button { font: inherit; color: inherit; }
       document.getElementById("b-" + k).setAttribute("aria-pressed", String(m === k));
     });
     build();
-    paintWhen(clockInfo());
-    syncStick();
     requestAnimationFrame(function () { go(startAt == null ? firstOpen() : startAt, false); });
-  }
-  function syncStick() {
-    var bar = document.querySelector(".sticky");
-    if (bar) document.documentElement.style.setProperty("--stick", bar.offsetHeight + "px");
   }
   ["m", "e", "s", "k", "q"].forEach(function (k) {
     document.getElementById("b-" + k).addEventListener("click", function () {
@@ -1336,85 +1275,22 @@ button { font: inherit; color: inherit; }
   }
   document.getElementById("t-minus").addEventListener("click", function () { if (S.size > 0) { S.size--; save(); applySize(); } });
   document.getElementById("t-plus").addEventListener("click", function () { if (S.size < SIZES.length - 1) { S.size++; save(); applySize(); } });
-  var autoBtn = document.getElementById("t-auto");
-  autoBtn.setAttribute("aria-pressed", String(S.auto));
-  autoBtn.addEventListener("click", function () {
-    S.auto = !S.auto; save(); autoBtn.setAttribute("aria-pressed", String(S.auto));
+  document.getElementById("b-undo").addEventListener("click", function () { var it = currentItem(); if (it) untap(it); });
+  document.getElementById("b-reset").addEventListener("click", function () { var it = currentItem(); if (it) resetItem(it); });
+  document.getElementById("b-copy").addEventListener("click", function () { var it = currentItem(); if (it) copyText(plain(it)); });
+  document.getElementById("b-share").addEventListener("click", function () {
+    var it = currentItem();
+    if (!it) return;
+    var text = plain(it);
+    if (navigator.share) {
+      navigator.share({ title: it.title, text: text }).catch(function (err) {
+        if (err && err.name === "AbortError") return;
+        copyText(text);
+      });
+    } else copyText(text);
   });
-
-  function isDark() {
-    var t = document.documentElement.getAttribute("data-theme");
-    if (t === "dark") return true;
-    if (t === "light") return false;
-    return window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
-  }
-  function paintTheme() {
-    var dark = isDark();
-    var b = document.getElementById("t-theme");
-    b.textContent = dark ? "الوضع النهاري" : "الوضع الليلي";
-    b.setAttribute("aria-pressed", String(dark));
-    var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", dark ? "#0D191E" : "#9A5A00");
-  }
-  document.getElementById("t-theme").addEventListener("click", function () {
-    var next = isDark() ? "light" : "dark";
-    document.documentElement.setAttribute("data-theme", next);
-    try { localStorage.setItem("adhkar-theme", next); } catch (err) {}
-    paintTheme();
-  });
-
-  var resetBtn = document.getElementById("t-reset"), armed = false, armTimer = null;
-  function disarm() { armed = false; clearTimeout(armTimer); resetBtn.textContent = "إعادة القسم"; resetBtn.classList.remove("armed"); }
-  resetBtn.addEventListener("click", function () {
-    if (!armed) {
-      armed = true;
-      resetBtn.textContent = "اضغط للتأكيد";
-      resetBtn.classList.add("armed");
-      armTimer = setTimeout(disarm, 3000);
-    } else {
-      disarm();
-      S[mode] = {};
-      if (mode === "m" || mode === "e") S.shared = {};
-      save();
-      setMode(mode, 0);
-    }
-  });
-
-  function openSheet() {
-    var ul = document.getElementById("sheet-list");
-    ul.textContent = "";
-    document.getElementById("sheet-title").textContent = "فهرس " + MODE_NAME[mode];
-    list.forEach(function (it, i) {
-      var li = document.createElement("li");
-      var b = el("button", "");
-      b.type = "button";
-      var name = el("span", "", ar(i + 1) + ". " + it.title);
-      var st = el("span", "st", isFin(it) ? "تم" : ar(doneOf(it)) + " / " + ar(it.count));
-      b.appendChild(name); b.appendChild(st);
-      b.addEventListener("click", function () { closeSheet(); go(i, true); });
-      li.appendChild(b);
-      ul.appendChild(li);
-    });
-    sheet.hidden = false;
-    document.getElementById("t-index").setAttribute("aria-expanded", "true");
-    document.body.style.overflow = "hidden";
-    document.getElementById("sheet-close").focus();
-  }
-  function closeSheet() {
-    sheet.hidden = true;
-    document.getElementById("t-index").setAttribute("aria-expanded", "false");
-    document.body.style.overflow = "";
-    document.getElementById("t-index").focus();
-  }
-  document.getElementById("t-index").addEventListener("click", openSheet);
-  document.getElementById("sheet-close").addEventListener("click", closeSheet);
-  sheet.addEventListener("click", function (e) { if (e.target === sheet) closeSheet(); });
 
   document.addEventListener("keydown", function (e) {
-    if (!sheet.hidden) {
-      if (e.key === "Escape") closeSheet();
-      return;
-    }
     if (e.key === "ArrowLeft") { e.preventDefault(); go(cur + 1, true); }
     else if (e.key === "ArrowRight") { e.preventDefault(); go(cur - 1, true); }
     else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
@@ -1424,24 +1300,24 @@ button { font: inherit; color: inherit; }
       sc.scrollBy({ top: e.key === "ArrowDown" ? 72 : -72, behavior: smooth ? "smooth" : "auto" });
     }
   });
-  car.addEventListener("scroll", updateCur, { passive: true });
   document.getElementById("nav-next").addEventListener("click", function () { go(cur + 1, true); });
   document.getElementById("nav-prev").addEventListener("click", function () { go(cur - 1, true); });
-  window.addEventListener("resize", function () { syncStick(); refreshMore(); });
+  window.addEventListener("resize", function () {
+    place(cur * (car.clientWidth || 0), false);
+    refreshMore();
+  });
+  bindSwipe();
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (pos) {
       geo = { lat: pos.coords.latitude, lng: pos.coords.longitude };
       try { localStorage.setItem("adhkar-geo", JSON.stringify(geo)); } catch (err) {}
       var info = clockInfo();
-      paintWhen(info);
       if (!userPicked && (mode === "m" || mode === "e") && info.mode !== mode) setMode(info.mode);
-    }, function () { paintWhen(clockInfo()); }, { enableHighAccuracy: false, maximumAge: 6 * 3600 * 1000, timeout: 8000 });
+    }, function () {}, { enableHighAccuracy: false, maximumAge: 6 * 3600 * 1000, timeout: 8000 });
   }
 
   applySize();
-  paintTheme();
-  paintWhen(info0);
   setMode(mode);
 })();
 </script>
