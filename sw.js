@@ -1,20 +1,53 @@
-const CACHE = "adhkar-v4";
-const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
+const CACHE = "adhkar-v5";
+const CORE = [
+  "./",
+  "./index.html",
+  "./manifest.webmanifest",
+  "./sw.js",
+  "./fonts.css",
+  "./icon-192.png",
+  "./icon-512.png",
+  "./maskable-512.png",
+  "./fonts/amiri-400.woff2",
+  "./fonts/amiri-700.woff2",
+  "./fonts/amiri-quran.woff2",
+  "./fonts/plex-400.woff2",
+  "./fonts/plex-500.woff2",
+  "./fonts/plex-600.woff2",
+  "./fonts/reem-kufi.woff2",
+  "./fonts/OFL.txt"
+];
+
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(CORE)).then(() => self.skipWaiting()));
 });
+
 self.addEventListener("activate", (e) => {
-  e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(
+    caches.keys()
+      .then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
 });
+
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
+  const url = new URL(e.request.url);
+  if (url.origin !== self.location.origin) return;
+
+  const update = fetch(e.request).then((res) => {
+    if (res && res.ok) {
+      const copy = res.clone();
+      return caches.open(CACHE).then((c) => c.put(e.request, copy)).then(() => res);
+    }
+    return res;
+  }).catch(() => null);
+
+  e.waitUntil(update.then(() => {}));
   e.respondWith(
     caches.match(e.request).then((hit) => {
-      const net = fetch(e.request).then((res) => {
-        if (res && (res.ok || res.type === "opaque")) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(e.request, copy)); }
-        return res;
-      }).catch(() => hit || caches.match("./index.html"));
-      return hit || net;
+      if (hit) return hit;
+      return update.then((res) => res || caches.match("./index.html"));
     })
   );
 });
