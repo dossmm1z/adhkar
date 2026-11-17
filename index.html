@@ -30,6 +30,8 @@
   --on-karb: #FFFFFF;
   --qiyam: #1F5F7A;
   --on-qiyam: #FFFFFF;
+  --layl: #5C3D2E;
+  --on-layl: #FFFFFF;
   --accent: var(--morning);
   --on-accent: var(--on-morning);
   --f-ui: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, system-ui, sans-serif;
@@ -68,6 +70,7 @@ body[data-mode="evening"] { --accent: var(--evening); --on-accent: var(--on-even
 body[data-mode="selected"] { --accent: var(--selected); --on-accent: var(--on-selected); }
 body[data-mode="karb"] { --accent: var(--karb); --on-accent: var(--on-karb); }
 body[data-mode="qiyam"] { --accent: var(--qiyam); --on-accent: var(--on-qiyam); }
+body[data-mode="layl"] { --accent: var(--layl); --on-accent: var(--on-layl); }
 
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -397,6 +400,7 @@ button { font: inherit; color: inherit; }
       <button type="button" id="b-s" aria-pressed="false">أدعية مختارة</button>
       <button type="button" id="b-k" aria-pressed="false">أدعية الكرب</button>
       <button type="button" id="b-q" aria-pressed="false">قيام الليل</button>
+      <button type="button" id="b-n" aria-pressed="false">أذكار قيام الليل</button>
     </div>
     <div class="prog" aria-live="polite">
       <div class="track"><i id="bar"></i></div>
@@ -435,16 +439,17 @@ button { font: inherit; color: inherit; }
     return n <= 10 ? ar(n) + " مرات" : ar(n) + " مرة";
   }
 
-  var MODE_NAME = { m: "أذكار الصباح", e: "أذكار المساء", s: "أدعية مختارة", k: "أدعية الكرب", q: "قيام الليل" };
+  var MODE_NAME = { m: "أذكار الصباح", e: "أذكار المساء", s: "أدعية مختارة", k: "أدعية الكرب", q: "قيام الليل", n: "أذكار قيام الليل" };
   var DONE_MSG = {
     m: "تقبّل الله منك. أتممت أذكار الصباح بحمد الله.",
     e: "تقبّل الله منك. أتممت أذكار المساء بحمد الله.",
     s: "تقبّل الله منك. أتممت الأدعية المختارة بحمد الله.",
     k: "تقبّل الله منك. أتممت أدعية الكرب بحمد الله.",
-    q: "تقبّل الله منك. أتممت دعاء قيام الليل بحمد الله."
+    q: "تقبّل الله منك. أتممت دعاء قيام الليل بحمد الله.",
+    n: "تقبّل الله منك. أتممت أذكار قيام الليل بحمد الله."
   };
 
-  /* when: b = صباح ومساء، m = الصباح فقط، e = المساء فقط، s/k/q أقسام مستقلة. span=day عدّاد واحد لليوم. */
+  /* when: b = صباح ومساء، m = الصباح فقط، e = المساء فقط، s/k/q/n أقسام مستقلة. span=day عدّاد واحد لليوم. */
   var ITEMS = [
   {
     "id": "kursi",
@@ -875,6 +880,86 @@ button { font: inherit; color: inherit; }
     "text": "اللَّهُمَّ رَبَّ جِبْرَائِيلَ وَمِيكَائِيلَ وَإِسْرَافِيلَ، فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ، عَالِمَ الْغَيْبِ وَالشَّهَادَةِ، أَنْتَ تَحْكُمُ بَيْنَ عِبَادِكَ فِيمَا كَانُوا فِيهِ يَخْتَلِفُونَ، اهْدِنِي لِمَا اخْتُلِفَ فِيهِ مِنَ الْحَقِّ بِإِذْنِكَ، إِنَّكَ تَهْدِي مَنْ تَشَاءُ إِلَى صِرَاطٍ مُسْتَقِيمٍ",
     "ref": "مسلم ٧٧٠ عن عائشة",
     "note": "صحيح مسلم ٧٧٠، عن عائشة: كان النبي ﷺ إذا قام من الليل افتتح صلاته بهذا الدعاء."
+  },
+  {
+    "id": "n-akbar",
+    "kind": "d",
+    "when": "n",
+    "count": 10,
+    "title": "التكبير",
+    "text": "اللَّهُ أَكْبَرُ",
+    "ref": "رواه أبو داود (٥٠٨٥) والنسائي في الكبرى، وحسّنه الألباني وغيره",
+    "note": "تُقال عند الاستيقاظ من الليل قبل افتتاح صلاة التهجد، كل ذكر عشر مرات. سُئلت عائشة رضي الله عنها: بم كان رسول الله ﷺ يفتتح إذا هبّ من الليل؟ فذكرت هذه الأذكار ثم قالت: ثم يفتتح الصلاة."
+  },
+  {
+    "id": "n-hamd",
+    "kind": "d",
+    "when": "n",
+    "count": 10,
+    "title": "الحمد",
+    "text": "الْحَمْدُ لِلَّهِ",
+    "ref": "رواه أبو داود (٥٠٨٥) والنسائي في الكبرى، وحسّنه الألباني وغيره",
+    "note": "تُقال عند الاستيقاظ من الليل قبل افتتاح صلاة التهجد، كل ذكر عشر مرات."
+  },
+  {
+    "id": "n-tasbih",
+    "kind": "d",
+    "when": "n",
+    "count": 10,
+    "title": "التسبيح بالحمد",
+    "text": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+    "ref": "رواه أبو داود (٥٠٨٥) والنسائي في الكبرى، وحسّنه الألباني وغيره",
+    "note": "تُقال عند الاستيقاظ من الليل قبل افتتاح صلاة التهجد، كل ذكر عشر مرات."
+  },
+  {
+    "id": "n-quddus",
+    "kind": "d",
+    "when": "n",
+    "count": 10,
+    "title": "تسبيح القدوس",
+    "text": "سُبْحَانَ الْمَلِكِ الْقُدُّوسِ",
+    "ref": "رواه أبو داود (٥٠٨٥) والنسائي في الكبرى، وحسّنه الألباني وغيره",
+    "note": "تُقال عند الاستيقاظ من الليل قبل افتتاح صلاة التهجد، كل ذكر عشر مرات."
+  },
+  {
+    "id": "n-istighfar",
+    "kind": "d",
+    "when": "n",
+    "count": 10,
+    "title": "الاستغفار",
+    "text": "أَسْتَغْفِرُ اللَّهَ",
+    "ref": "رواه أبو داود (٥٠٨٥) والنسائي في الكبرى، وحسّنه الألباني وغيره",
+    "note": "تُقال عند الاستيقاظ من الليل قبل افتتاح صلاة التهجد، كل ذكر عشر مرات."
+  },
+  {
+    "id": "n-tahlil",
+    "kind": "d",
+    "when": "n",
+    "count": 10,
+    "title": "التهليل",
+    "text": "لَا إِلَٰهَ إِلَّا اللَّهُ",
+    "ref": "رواه أبو داود (٥٠٨٥) والنسائي في الكبرى، وحسّنه الألباني وغيره",
+    "note": "تُقال عند الاستيقاظ من الليل قبل افتتاح صلاة التهجد، كل ذكر عشر مرات."
+  },
+  {
+    "id": "n-diq",
+    "kind": "d",
+    "when": "n",
+    "count": 10,
+    "title": "الاستعاذة من ضيق الدنيا والقيامة",
+    "text": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ ضِيقِ الدُّنْيَا، وَضِيقِ يَوْمِ الْقِيَامَةِ",
+    "ref": "رواه أبو داود (٥٠٨٥) والنسائي في الكبرى، وحسّنه الألباني وغيره",
+    "note": "تُقال عند الاستيقاظ من الليل قبل افتتاح صلاة التهجد، كل ذكر عشر مرات."
+  },
+  {
+    "id": "n-witr",
+    "kind": "d",
+    "when": "n",
+    "count": 3,
+    "title": "بعد السلام من الوتر",
+    "text": "سُبْحَانَ الْمَلِكِ الْقُدُّوسِ",
+    "ref": "رواه أبو داود (١٤٣٠) والنسائي، وصحّحه الألباني",
+    "note": "بعد السلام من الوتر: ثلاث مرات، يمدّ صوته ويرفعه في الثالثة"
   }
 ];
 
@@ -884,7 +969,7 @@ button { font: inherit; color: inherit; }
     var d = new Date();
     return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
   }
-  var S = { day: today(), size: 2, auto: true, m: {}, e: {}, s: {}, k: {}, q: {}, shared: {} };
+  var S = { day: today(), size: 2, auto: true, m: {}, e: {}, s: {}, k: {}, q: {}, n: {}, shared: {} };
   try {
     var saved = JSON.parse(localStorage.getItem(KEY) || "null");
     if (saved && typeof saved === "object") {
@@ -892,7 +977,7 @@ button { font: inherit; color: inherit; }
       if (typeof saved.auto === "boolean") S.auto = saved.auto;
       if (saved.day === S.day) {
         S.m = saved.m || {}; S.e = saved.e || {}; S.s = saved.s || {};
-        S.k = saved.k || {}; S.q = saved.q || {}; S.shared = saved.shared || {};
+        S.k = saved.k || {}; S.q = saved.q || {}; S.n = saved.n || {}; S.shared = saved.shared || {};
       }
     }
   } catch (err) {}
@@ -1253,14 +1338,14 @@ button { font: inherit; color: inherit; }
 
   function setMode(m, startAt) {
     mode = m;
-    document.body.setAttribute("data-mode", m === "e" ? "evening" : m === "s" ? "selected" : m === "k" ? "karb" : m === "q" ? "qiyam" : "morning");
-    ["m", "e", "s", "k", "q"].forEach(function (k) {
+    document.body.setAttribute("data-mode", m === "e" ? "evening" : m === "s" ? "selected" : m === "k" ? "karb" : m === "q" ? "qiyam" : m === "n" ? "layl" : "morning");
+    ["m", "e", "s", "k", "q", "n"].forEach(function (k) {
       document.getElementById("b-" + k).setAttribute("aria-pressed", String(m === k));
     });
     build();
     requestAnimationFrame(function () { go(startAt == null ? firstOpen() : startAt, false); });
   }
-  ["m", "e", "s", "k", "q"].forEach(function (k) {
+  ["m", "e", "s", "k", "q", "n"].forEach(function (k) {
     document.getElementById("b-" + k).addEventListener("click", function () {
       userPicked = true;
       if (mode !== k) setMode(k);
