@@ -30,6 +30,8 @@
   --on-karb: #FFFFFF;
   --qiyam: #1F5F7A;
   --on-qiyam: #FFFFFF;
+  --ruqya: #1A5C45;
+  --on-ruqya: #FFFFFF;
   --accent: var(--morning);
   --on-accent: var(--on-morning);
   --f-ui: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, system-ui, sans-serif;
@@ -68,6 +70,7 @@ body[data-mode="evening"] { --accent: var(--evening); --on-accent: var(--on-even
 body[data-mode="selected"] { --accent: var(--selected); --on-accent: var(--on-selected); }
 body[data-mode="karb"] { --accent: var(--karb); --on-accent: var(--on-karb); }
 body[data-mode="qiyam"] { --accent: var(--qiyam); --on-accent: var(--on-qiyam); }
+body[data-mode="ruqya"] { --accent: var(--ruqya); --on-accent: var(--on-ruqya); }
 
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -183,6 +186,22 @@ button { font: inherit; color: inherit; }
   overflow-wrap: anywhere;
 }
 .text.q { font-family: var(--f-quran); line-height: 2.2; }
+.text .line { unicode-bidi: isolate; }
+.text .paren {
+  unicode-bidi: isolate;
+  font-size: .72em;
+  font-weight: 500;
+  color: var(--muted);
+}
+.pre-note {
+  margin: 0 0 10px;
+  font-size: .98rem;
+  line-height: 1.75;
+  text-align: center;
+  color: var(--fg);
+  font-weight: 500;
+}
+.paren { unicode-bidi: isolate; }
 .read .fade {
   position: absolute;
   inset-inline: 0;
@@ -397,6 +416,7 @@ button { font: inherit; color: inherit; }
       <button type="button" id="b-s" aria-pressed="false">أدعية مختارة</button>
       <button type="button" id="b-k" aria-pressed="false">أدعية الكرب</button>
       <button type="button" id="b-q" aria-pressed="false">قيام الليل</button>
+      <button type="button" id="b-r" aria-pressed="false">الرقية الشرعية</button>
     </div>
     <div class="prog" aria-live="polite">
       <div class="track"><i id="bar"></i></div>
@@ -435,16 +455,17 @@ button { font: inherit; color: inherit; }
     return n <= 10 ? ar(n) + " مرات" : ar(n) + " مرة";
   }
 
-  var MODE_NAME = { m: "أذكار الصباح", e: "أذكار المساء", s: "أدعية مختارة", k: "أدعية الكرب", q: "قيام الليل" };
+  var MODE_NAME = { m: "أذكار الصباح", e: "أذكار المساء", s: "أدعية مختارة", k: "أدعية الكرب", q: "قيام الليل", r: "الرقية الشرعية" };
   var DONE_MSG = {
     m: "تقبّل الله منك. أتممت أذكار الصباح بحمد الله.",
     e: "تقبّل الله منك. أتممت أذكار المساء بحمد الله.",
     s: "تقبّل الله منك. أتممت الأدعية المختارة بحمد الله.",
     k: "تقبّل الله منك. أتممت أدعية الكرب بحمد الله.",
-    q: "تقبّل الله منك. أتممت دعاء قيام الليل بحمد الله."
+    q: "تقبّل الله منك. أتممت دعاء قيام الليل بحمد الله.",
+    r: "تقبّل الله منك. أتممت الرقية الشرعية بحمد الله."
   };
 
-  /* when: b = صباح ومساء، m = الصباح فقط، e = المساء فقط، s/k/q أقسام مستقلة. span=day عدّاد واحد لليوم. */
+  /* when: b = صباح ومساء، m = الصباح فقط، e = المساء فقط، s/k/q/r أقسام مستقلة. span=day عدّاد واحد لليوم. */
   var ITEMS = [
   {
     "id": "kursi",
@@ -914,7 +935,29 @@ button { font: inherit; color: inherit; }
     "text": "سُبْحَانَ الْمَلِكِ الْقُدُّوسِ",
     "ref": "رواه أبو داود (١٤٣٠) والنسائي، وصحّحه الألباني",
     "note": "بعد السلام من الوتر: ثلاث مرات، يمدّ صوته ويرفعه في الثالثة"
-  }
+  },
+  {
+    "id": "ruqya-fatiha",
+    "kind": "d",
+    "when": "r",
+    "count": 1,
+    "title": "الرقية بالفاتحة",
+    "text": "قراءة سورة الفاتحة",
+    "ref": "رواه أبو داود (٣٨٩٧) وأحمد والنسائي في الكبرى من حديث خارجة بن الصلت عن عمه رضي الله عنه، وصححه الألباني",
+    "note": "تُقرأ على النفس أو على المريض ثلاثة أيام، غدوةً وعشيةً (صباحًا ومساءً)"
+  },
+  {
+    "id": "ruqya-alam",
+    "kind": "d",
+    "when": "r",
+    "count": 7,
+    "title": "الرقية من الألم",
+    "text": "بِسْمِ اللَّهِ\nأَعُوذُ بِعِزَّةِ اللَّهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ",
+    "ref": "رواه ابن ماجه (٣٥٢٢) من حديث عثمان بن أبي العاص رضي الله عنه، وصححه الألباني، وأصله في صحيح مسلم (٢٢٠٢)",
+    "note": "ضع يدك اليمنى على موضع الألم، وقل: بسم الله (ثلاثًا)، ثم قل سبع مرات:",
+    "noteBefore": true,
+    "quoteLines": true
+  },
 ];
 
   var KEY = "adhkar-cards-v1";
@@ -923,7 +966,7 @@ button { font: inherit; color: inherit; }
     var d = new Date();
     return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
   }
-  var S = { day: today(), size: 2, auto: true, m: {}, e: {}, s: {}, k: {}, q: {}, shared: {} };
+  var S = { day: today(), size: 2, auto: true, m: {}, e: {}, s: {}, k: {}, q: {}, r: {}, shared: {} };
   try {
     var saved = JSON.parse(localStorage.getItem(KEY) || "null");
     if (saved && typeof saved === "object") {
@@ -931,7 +974,7 @@ button { font: inherit; color: inherit; }
       if (typeof saved.auto === "boolean") S.auto = saved.auto;
       if (saved.day === S.day) {
         S.m = saved.m || {}; S.e = saved.e || {}; S.s = saved.s || {};
-        S.k = saved.k || {}; S.q = saved.q || {}; S.shared = saved.shared || {};
+        S.k = saved.k || {}; S.q = saved.q || {}; S.r = saved.r || {}; S.shared = saved.shared || {};
         /* The separate night tab was folded into q. Keep those counts. */
         if (saved.n && typeof saved.n === "object") {
           ["n-layl", "n-witr"].forEach(function (id) {
@@ -1087,8 +1130,38 @@ button { font: inherit; color: inherit; }
       var raw = rawText(it);
       var quote = it.kind !== "q";
       var lines = raw.split("\n");
+      function addParens(parent, str) {
+        str.split(/(\([^)]*\))/).forEach(function (bit) {
+          if (!bit) return;
+          if (bit.charAt(0) === "(" && bit.charAt(bit.length - 1) === ")") {
+            var s = document.createElement("span");
+            s.className = "paren";
+            s.setAttribute("dir", "rtl");
+            s.textContent = bit;
+            parent.appendChild(s);
+          } else parent.appendChild(document.createTextNode(bit));
+        });
+      }
+      if (it.note && it.noteBefore) {
+        var pre = el("p", "pre-note");
+        pre.setAttribute("dir", "rtl");
+        addParens(pre, it.note);
+        scroller.appendChild(pre);
+      }
       var p = el("p", "text" + (it.kind === "q" ? " q" : ""));
-      if (lines.length === 1) {
+      p.setAttribute("dir", "rtl");
+      if (lines.length > 1 && it.quoteLines) {
+        lines.forEach(function (line, idx) {
+          if (idx) p.appendChild(document.createElement("br"));
+          var span = document.createElement("span");
+          span.className = "line";
+          span.setAttribute("dir", "rtl");
+          if (quote) span.appendChild(document.createTextNode("«"));
+          addParens(span, line);
+          if (quote) span.appendChild(document.createTextNode("»"));
+          p.appendChild(span);
+        });
+      } else if (lines.length === 1) {
         p.textContent = quote ? "«" + raw + "»" : raw;
       } else {
         if (quote) p.appendChild(document.createTextNode("«"));
@@ -1099,18 +1172,20 @@ button { font: inherit; color: inherit; }
         if (quote) p.appendChild(document.createTextNode("»"));
       }
       scroller.appendChild(p);
-      if (it.ref || it.note) {
+      if (it.ref || (it.note && !it.noteBefore)) {
         var meta = el("div", "meta-wrap");
         if (it.ref) {
           var r = el("p", "meta");
+          r.setAttribute("dir", "rtl");
           r.appendChild(el("span", "k", "المصدر: "));
-          r.appendChild(document.createTextNode(it.ref));
+          addParens(r, it.ref);
           meta.appendChild(r);
         }
-        if (it.note) {
+        if (it.note && !it.noteBefore) {
           var nte = el("p", "meta");
+          nte.setAttribute("dir", "rtl");
           nte.appendChild(el("span", "k", "البيان: "));
-          nte.appendChild(document.createTextNode(it.note));
+          addParens(nte, it.note);
           meta.appendChild(nte);
         }
         scroller.appendChild(meta);
@@ -1311,14 +1386,14 @@ button { font: inherit; color: inherit; }
 
   function setMode(m, startAt) {
     mode = m;
-    document.body.setAttribute("data-mode", m === "e" ? "evening" : m === "s" ? "selected" : m === "k" ? "karb" : m === "q" ? "qiyam" : "morning");
-    ["m", "e", "s", "k", "q"].forEach(function (k) {
+    document.body.setAttribute("data-mode", m === "e" ? "evening" : m === "s" ? "selected" : m === "k" ? "karb" : m === "q" ? "qiyam" : m === "r" ? "ruqya" : "morning");
+    ["m", "e", "s", "k", "q", "r"].forEach(function (k) {
       document.getElementById("b-" + k).setAttribute("aria-pressed", String(m === k));
     });
     build();
     requestAnimationFrame(function () { go(startAt == null ? firstOpen() : startAt, false); });
   }
-  ["m", "e", "s", "k", "q"].forEach(function (k) {
+  ["m", "e", "s", "k", "q", "r"].forEach(function (k) {
     document.getElementById("b-" + k).addEventListener("click", function () {
       userPicked = true;
       if (mode !== k) setMode(k);
