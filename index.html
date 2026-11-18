@@ -186,6 +186,22 @@ button { font: inherit; color: inherit; }
   overflow-wrap: anywhere;
 }
 .text.q { font-family: var(--f-quran); line-height: 2.2; }
+.text .line { unicode-bidi: isolate; }
+.text .paren {
+  unicode-bidi: isolate;
+  font-size: .72em;
+  font-weight: 500;
+  color: var(--muted);
+}
+.pre-note {
+  margin: 0 0 10px;
+  font-size: .98rem;
+  line-height: 1.75;
+  text-align: center;
+  color: var(--fg);
+  font-weight: 500;
+}
+.paren { unicode-bidi: isolate; }
 .read .fade {
   position: absolute;
   inset-inline: 0;
@@ -936,9 +952,11 @@ button { font: inherit; color: inherit; }
     "when": "r",
     "count": 7,
     "title": "الرقية من الألم",
-    "text": "بِسْمِ اللَّهِ (ثلاثًا)\nأَعُوذُ بِعِزَّةِ اللَّهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ",
+    "text": "بِسْمِ اللَّهِ (ثَلَاثًا)\nأَعُوذُ بِعِزَّةِ اللَّهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ (سَبْعَ مَرَّاتٍ)",
     "ref": "رواه ابن ماجه (٣٥٢٢) من حديث عثمان بن أبي العاص رضي الله عنه، وصححه الألباني، وأصله في صحيح مسلم (٢٢٠٢)",
-    "note": "ضع يدك اليمنى على موضع الألم، وقل: بسم الله (ثلاثًا)، ثم قل سبع مرات:"
+    "note": "ضع يدك اليمنى على موضع الألم، وقل: بسم الله (ثلاثًا)، ثم قل سبع مرات:",
+    "noteBefore": true,
+    "quoteLines": true
   },
 ];
 
@@ -1112,8 +1130,38 @@ button { font: inherit; color: inherit; }
       var raw = rawText(it);
       var quote = it.kind !== "q";
       var lines = raw.split("\n");
+      function addParens(parent, str) {
+        str.split(/(\([^)]*\))/).forEach(function (bit) {
+          if (!bit) return;
+          if (bit.charAt(0) === "(" && bit.charAt(bit.length - 1) === ")") {
+            var s = document.createElement("span");
+            s.className = "paren";
+            s.setAttribute("dir", "rtl");
+            s.textContent = bit;
+            parent.appendChild(s);
+          } else parent.appendChild(document.createTextNode(bit));
+        });
+      }
+      if (it.note && it.noteBefore) {
+        var pre = el("p", "pre-note");
+        pre.setAttribute("dir", "rtl");
+        addParens(pre, it.note);
+        scroller.appendChild(pre);
+      }
       var p = el("p", "text" + (it.kind === "q" ? " q" : ""));
-      if (lines.length === 1) {
+      p.setAttribute("dir", "rtl");
+      if (lines.length > 1 && it.quoteLines) {
+        lines.forEach(function (line, idx) {
+          if (idx) p.appendChild(document.createElement("br"));
+          var span = document.createElement("span");
+          span.className = "line";
+          span.setAttribute("dir", "rtl");
+          if (quote) span.appendChild(document.createTextNode("«"));
+          addParens(span, line);
+          if (quote) span.appendChild(document.createTextNode("»"));
+          p.appendChild(span);
+        });
+      } else if (lines.length === 1) {
         p.textContent = quote ? "«" + raw + "»" : raw;
       } else {
         if (quote) p.appendChild(document.createTextNode("«"));
@@ -1124,18 +1172,20 @@ button { font: inherit; color: inherit; }
         if (quote) p.appendChild(document.createTextNode("»"));
       }
       scroller.appendChild(p);
-      if (it.ref || it.note) {
+      if (it.ref || (it.note && !it.noteBefore)) {
         var meta = el("div", "meta-wrap");
         if (it.ref) {
           var r = el("p", "meta");
+          r.setAttribute("dir", "rtl");
           r.appendChild(el("span", "k", "المصدر: "));
-          r.appendChild(document.createTextNode(it.ref));
+          addParens(r, it.ref);
           meta.appendChild(r);
         }
-        if (it.note) {
+        if (it.note && !it.noteBefore) {
           var nte = el("p", "meta");
+          nte.setAttribute("dir", "rtl");
           nte.appendChild(el("span", "k", "البيان: "));
-          nte.appendChild(document.createTextNode(it.note));
+          addParens(nte, it.note);
           meta.appendChild(nte);
         }
         scroller.appendChild(meta);
