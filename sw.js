@@ -1,4 +1,4 @@
-const CACHE = "adhkar-v15";
+const CACHE = "adhkar-v16";
 const CORE = [
   "./",
   "./index.html",
