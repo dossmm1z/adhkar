@@ -236,6 +236,10 @@ button { font: inherit; color: inherit; }
   font-weight: 500;
 }
 .meta .k { font-weight: 700; color: var(--accent); }
+.know { margin: 2px 0 0; text-align: right; }
+.know .k { margin: 0 0 4px; font-weight: 700; color: var(--accent); font-size: .98rem; }
+.know ul { margin: 0; padding: 0 1.15em 0 0; list-style: disc; }
+.know li { margin: 0 0 4px; font-size: .95rem; line-height: 1.65; text-align: right; }
 
 .foot { display: flex; flex-direction: column; gap: 8px; }
 .mini { height: 5px; border-radius: 5px; background: var(--line); overflow: hidden; }
@@ -914,7 +918,16 @@ button { font: inherit; color: inherit; }
     "title": "دعاء أيوب",
     "text": "أَنِّي مَسَّنِيَ الضُّرُّ وَأَنْتَ أَرْحَمُ الرَّاحِمِينَ",
     "ref": "دعاء أيوب عليه السلام [الأنبياء: ٨٣] — وكلام ابن القيم في كتاب الفوائد (ص٢٩٢، ط عطاءات العلم)",
-    "note": "قال ابن القيم رحمه الله: وقد جُرِّبَ أنه من قالها سبع مراتٍ، ولا سيما مع هذه المعرفة، كشفَ الله ضرَّه."
+    "note": "قال ابن القيم رحمه الله: وقد جُرِّبَ أنه من قالها سبع مراتٍ، ولا سيما مع هذه المعرفة، كشفَ الله ضرَّه.",
+    "pointsTitle": "المعرفة المقصودة:",
+    "points": [
+      "التوحيد: لا تشكو إلا إلى الله وحده",
+      "الافتقار: اعترف بحاجتك وضعفك بين يديه",
+      "المحبة والتذلل: ادعُه بتودد لا بتسخط",
+      "الإقرار بالرحمة: هو أرحم بك من كل أحد",
+      "التوسل بصفاته: ادخل عليه باسمه الرحيم",
+      "الأدب في الطلب: اعرض حالك وفوّض الأمر إليه"
+    ]
   },
   {
     "id": "n-layl",
@@ -1084,6 +1097,9 @@ button { font: inherit; color: inherit; }
     var parts = [it.title, rawText(it)];
     if (it.ref) parts.push(it.ref);
     if (it.note) parts.push(it.note);
+    if (it.points && it.points.length) {
+      parts.push((it.pointsTitle || "") + "\n" + it.points.map(function (line) { return "• " + line; }).join("\n"));
+    }
     return parts.join("\n\n");
   }
   var toastTimer = null;
@@ -1197,6 +1213,16 @@ button { font: inherit; color: inherit; }
           nte.appendChild(el("span", "k", "البيان: "));
           addParens(nte, it.note);
           meta.appendChild(nte);
+        }
+        if (it.points && it.points.length) {
+          var know = el("div", "know");
+          know.setAttribute("dir", "rtl");
+          know.appendChild(el("p", "k", it.pointsTitle || ""));
+          var ul = document.createElement("ul");
+          ul.setAttribute("dir", "rtl");
+          it.points.forEach(function (line) { ul.appendChild(el("li", "", line)); });
+          know.appendChild(ul);
+          meta.appendChild(know);
         }
         scroller.appendChild(meta);
       }
