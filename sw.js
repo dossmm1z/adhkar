@@ -1,4 +1,4 @@
-const CACHE = "adhkar-v19";
+const CACHE = "adhkar-v20";
 const CORE = [
   "./",
   "./index.html",
@@ -15,6 +15,11 @@ const CORE = [
   "./fonts/plex-500.woff2",
   "./fonts/plex-600.woff2",
   "./fonts/reem-kufi.woff2",
+  "./fonts/amiri-punct-400.woff2",
+  "./fonts/amiri-punct-700.woff2",
+  "./fonts/plex-punct-400.woff2",
+  "./fonts/plex-punct-500.woff2",
+  "./fonts/plex-punct-600.woff2",
   "./fonts/OFL.txt"
 ];
 

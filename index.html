@@ -124,6 +124,7 @@ button { font: inherit; color: inherit; }
 }
 .track {
   display: flex;
+  flex-direction: row-reverse;
   height: 100%;
   width: 100%;
   will-change: transform;
@@ -381,6 +382,35 @@ button { font: inherit; color: inherit; }
   font-weight: 700;
 }
 .toast[hidden] { display: none; }
+.geo-ask {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 40;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--fg);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .18);
+}
+.geo-ask p { margin: 0 0 10px; line-height: 1.7; font-size: .98rem; }
+.geo-ask .row { display: flex; gap: 8px; }
+.geo-ask button {
+  flex: 1;
+  min-height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.geo-ask button.yes { background: var(--accent); color: var(--on-accent, #fff); border-color: transparent; }
 .nav-row {
   display: none;
   gap: 8px;
@@ -709,7 +739,8 @@ button { font: inherit; color: inherit; }
     "count": 100,
     "title": "التسبيح والتحميد",
     "text": "سُبْحَانَ اللهِ وَبِحَمْدِهِ",
-    "ref": "البخاري: مائة مرة في الصباح والمساء"
+    "ref": "صحيح مسلم ٢٦٩٢، عن أبي هريرة",
+    "note": "«من قال حين يصبح وحين يمسي: سبحان الله وبحمده مائة مرة، لم يأتِ أحد يوم القيامة بأفضل مما جاء به، إلا أحد قال مثل ما قال أو زاد عليه». ولفظ البخاري «في يوم مائة مرة» بغير تقييد بالصباح والمساء."
   },
   {
     "id": "tahlil",
@@ -739,7 +770,7 @@ button { font: inherit; color: inherit; }
     "text": "أَسْتَغْفِرُ اللهَ وَأَتُوبُ إِلَيْهِ",
     "span": "day",
     "ref": "حصن المسلم، عن البخاري ٦٣٠٧ ومسلم ٢٧٠٢",
-    "note": "«أَسْتَغْفِرُ اللهَ وَأَتُوبُ إِلَيْهِ» مائة مرة في اليوم، كما في حصن المسلم، لا في كل من الصباح والمساء. والأصل: البخاري ٦٣٠٧ «لأستغفر الله وأتوب إليه في اليوم أكثر من سبعين مرة»، ومسلم ٢٧٠٢ «أتوب في اليوم إليه مائة مرة». والصيغة الطويلة «أستغفر الله العظيم الذي لا إله إلا هو الحي القيوم وأتوب إليه» في أبي داود ١٥١٧ والترمذي ٣٥٧٧، وليست مقيدة بالمائة."
+    "note": "«أَسْتَغْفِرُ اللهَ وَأَتُوبُ إِلَيْهِ» مائة مرة في اليوم، كما في حصن المسلم، لا في كل من الصباح والمساء. والأصل: البخاري ٦٣٠٧ «لأستغفر الله وأتوب إليه في اليوم أكثر من سبعين مرة»، ومسلم ٢٧٠٢ «أتوب في اليوم إليه مائة مرة». والصيغة الطويلة «أستغفر الله الذي لا إله إلا هو الحي القيوم وأتوب إليه» في أبي داود ١٥١٧ والترمذي ٣٥٧٧، بغير لفظ «العظيم»، وليست مقيدة بالمائة."
   },
   {
     "id": "salat",
@@ -837,7 +868,7 @@ button { font: inherit; color: inherit; }
     "when": "s",
     "count": 1,
     "title": "سؤال الهدى والتقى والعفاف والغنى",
-    "text": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْهُدَى وَالتُّقَى وَالْعَفَافِ وَالْغِنَى",
+    "text": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْهُدَى وَالتُّقَى وَالْعَفَافَ وَالْغِنَى",
     "ref": "مسلم عن ابن مسعود",
     "note": "صحيح مسلم، عن ابن مسعود: كان النبي ﷺ يقول هذا الدعاء."
   },
@@ -897,12 +928,12 @@ button { font: inherit; color: inherit; }
     "count": 1,
     "title": "اللهم رب السماوات السبع",
     "text": "اللَّهُمَّ رَبَّ السَّمَوَاتِ السَّبْعِ وَرَبَّ الْعَرْشِ الْعَظِيمِ، رَبَّنَا وَرَبَّ كُلِّ شَيْءٍ، مُنْزِلَ التَّوْرَاةِ وَالْإِنْجِيلِ وَالْفُرْقَانِ، فَالِقَ الْحَبِّ وَالنَّوَى لَا إِلَهَ إِلَّا أَنْتَ أَعُوذُ بِكَ مِنْ شَرِّ كُلِّ شَيْءٍ أَنْتَ آخِذٌ بِنَاصِيَتِهِ، أَنْتَ الْأَوَّلُ لَيْسَ قَبْلَكَ شَيْءٌ وَأَنْتَ الْآخِرُ لَيْسَ بَعْدَكَ شَيْءٌ، وَأَنْتَ الظَّاهِرُ لَيْسَ فَوْقَكَ شَيْءٌ، وَأَنْتَ الْبَاطِنُ لَيْسَ دُونَكَ شَيْءٌ. اقْضِ عَنَّا الدَّيْنَ، وَأَغْنِنَا مِنَ الْفَقْرِ",
-    "ref": "رواه أحمد من حديث أبي هريرة رضي الله عنه، وأصله في صحيح مسلم (٢٧١٣)",
-    "note": "يُقال عند النوم، ولقضاء الدين والغنى من الفقر"
+    "ref": "عن أبي هريرة رضي الله عنه: صحيح مسلم (٢٧١٣)، ومسند أحمد والترمذي",
+    "note": "يُقال عند النوم، ولقضاء الدين والغنى من الفقر. واللفظ هنا جامع بين روايتين: «السبع» من رواية أحمد والترمذي، و«الفرقان» و«اقض عنا الدين» من لفظ مسلم، ولفظ مسلم «رب السماوات ورب الأرض ورب العرش العظيم»."
   },
   {
     "id": "mukhtara-awzini",
-    "kind": "d",
+    "kind": "q",
     "when": "s",
     "count": 1,
     "title": "رب أوزعني",
@@ -931,7 +962,7 @@ button { font: inherit; color: inherit; }
   },
   {
     "id": "karb-ayyub",
-    "kind": "d",
+    "kind": "q",
     "when": "k",
     "count": 7,
     "title": "دعاء أيوب",
@@ -953,7 +984,7 @@ button { font: inherit; color: inherit; }
     "kind": "d",
     "when": "q",
     "count": 1,
-    "title": "دعاء استفتاح صلاة الليل",
+    "title": "أذكار الاستيقاظ قبل التهجد",
     "text": "اللَّهُ أَكْبَرُ (عشر مرات)،\nالْحَمْدُ لِلَّهِ (عشر مرات)،\nسُبْحَانَ اللَّهِ وَبِحَمْدِهِ (عشر مرات)،\nسُبْحَانَ الْمَلِكِ الْقُدُّوسِ (عشر مرات)،\nأَسْتَغْفِرُ اللَّهَ (عشر مرات)،\nلَا إِلَٰهَ إِلَّا اللَّهُ (عشر مرات)،\nاللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ ضِيقِ الدُّنْيَا، وَضِيقِ يَوْمِ الْقِيَامَةِ (عشر مرات)",
     "ref": "رواه أبو داود (٥٠٨٥) والنسائي في الكبرى، وحسّنه الألباني وغيره",
     "note": "تُقال عند الاستيقاظ من الليل قبل افتتاح صلاة التهجد، كل ذكر عشر مرات. سُئلت عائشة رضي الله عنها: بم كان رسول الله ﷺ يفتتح إذا هبّ من الليل؟ فذكرت هذه الأذكار ثم قالت: ثم يفتتح الصلاة."
@@ -980,11 +1011,11 @@ button { font: inherit; color: inherit; }
   },
   {
     "id": "ruqya-fatiha",
-    "kind": "d",
+    "kind": "q",
     "when": "r",
     "count": 1,
     "title": "الرقية بالفاتحة",
-    "text": "قراءة سورة الفاتحة",
+    "text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ﴿١﴾ الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ﴿٢﴾ الرَّحْمَٰنِ الرَّحِيمِ ﴿٣﴾ مَالِكِ يَوْمِ الدِّينِ ﴿٤﴾ إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ﴿٥﴾ اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ ﴿٦﴾ صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ ﴿٧﴾",
     "ref": "رواه أبو داود (٣٨٩٧) وأحمد والنسائي في الكبرى من حديث خارجة بن الصلت عن عمه رضي الله عنه، وصححه الألباني",
     "note": "تُقرأ على النفس أو على المريض ثلاثة أيام، غدوةً وعشيةً (صباحًا ومساءً)"
   },
@@ -1337,13 +1368,13 @@ button { font: inherit; color: inherit; }
     requestAnimationFrame(upd);
   }
   function refreshMore() { moreWatchers.forEach(function (fn) { fn(); }); }
-  /* Cards are laid out left-to-right in an LTR track. Showing index i means
-     translating the track left by i widths. Finger movement is measured only
-     from clientX, so the direction does not depend on RTL scrollLeft. */
+  /* Arabic-book order: card 0 sits on the right and later cards line up to
+     its left (row-reverse track). Showing index i means translating the track
+     right by i widths. Finger movement is measured only from clientX. */
   function place(px, animate) {
     if (!track) return;
     track.style.transition = animate && smooth ? "transform .28s ease" : "none";
-    track.style.transform = "translate3d(" + (-px) + "px,0,0)";
+    track.style.transform = "translate3d(" + px + "px,0,0)";
   }
   function go(i, sm) {
     i = Math.max(0, Math.min(cards.length - 1, i));
@@ -1371,7 +1402,7 @@ button { font: inherit; color: inherit; }
       if (e.cancelable) e.preventDefault();
       var w = car.clientWidth || 1;
       var max = Math.max(0, cards.length - 1) * w;
-      var raw = cur * w - dx;
+      var raw = cur * w + dx;
       if (raw < 0) raw *= 0.35;
       if (raw > max) raw = max + (raw - max) * 0.35;
       place(raw, false);
@@ -1380,9 +1411,10 @@ button { font: inherit; color: inherit; }
       if (!active) return;
       active = false;
       if (lock === "x") {
-        /* dx < 0: finger moved right-to-left → next. dx > 0 → previous. */
-        if (dx <= -48) go(cur + 1, true);
-        else if (dx >= 48) go(cur - 1, true);
+        /* Like turning an Arabic book page: finger moves left-to-right (dx > 0)
+           → next card, which comes in from the left. dx < 0 → previous. */
+        if (dx >= 48) go(cur + 1, true);
+        else if (dx <= -48) go(cur - 1, true);
         else go(cur, true);
       }
       if (lock) {
@@ -1496,13 +1528,39 @@ button { font: inherit; color: inherit; }
   });
   bindSwipe();
 
-  if (navigator.geolocation) {
+  function locate() {
     navigator.geolocation.getCurrentPosition(function (pos) {
       geo = { lat: pos.coords.latitude, lng: pos.coords.longitude };
       try { localStorage.setItem("adhkar-geo", JSON.stringify(geo)); } catch (err) {}
       var info = clockInfo();
       if (!userPicked && (mode === "m" || mode === "e") && info.mode !== mode) setMode(info.mode);
     }, function () {}, { enableHighAccuracy: false, maximumAge: 6 * 3600 * 1000, timeout: 8000 });
+  }
+  /* Explain why before the browser asks. Ask once; a saved location means it
+     was already allowed, so refresh it quietly. */
+  function askGeo() {
+    var box = el("div", "geo-ask");
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-label", "استخدام الموقع");
+    box.appendChild(el("p", "", "يحسب التطبيق وقت العصر من موقعك ليبدأ أذكار المساء تلقائيًا بعده. الموقع يبقى في جوالك ولا يُرسل لأي جهة. وبدونه يبدأ المساء الساعة ٣ العصر."));
+    var row = el("div", "row");
+    var yes = el("button", "yes", "سماح"); yes.type = "button";
+    var no = el("button", "", "لاحقًا"); no.type = "button";
+    function close(v) {
+      try { localStorage.setItem("adhkar-geo-asked", v); } catch (err) {}
+      box.remove();
+    }
+    yes.addEventListener("click", function () { close("yes"); locate(); });
+    no.addEventListener("click", function () { close("later"); });
+    row.appendChild(yes); row.appendChild(no);
+    box.appendChild(row);
+    document.body.appendChild(box);
+  }
+  if (navigator.geolocation) {
+    var askedGeo = null;
+    try { askedGeo = localStorage.getItem("adhkar-geo-asked"); } catch (err) {}
+    if (geo || askedGeo === "yes") locate();
+    else if (!askedGeo) askGeo();
   }
 
   applySize();
