@@ -1439,10 +1439,17 @@ button { font: inherit; color: inherit; }
     if (d >= it.count) return;
     storeOf(it)[it.id] = d + 1;
     save(); paint(i); progress();
-    if (d + 1 >= it.count) buzz([12, 40, 12]);
-    else buzz(12);
+    if (d + 1 >= it.count) {
+      buzz([12, 40, 12]);
+      /* Auto-advance once the count is complete, if the reader is still here. */
+      clearTimeout(advanceTimer);
+      advanceTimer = setTimeout(function () {
+        if (cur === i && list[i] === it) go(i + 1, true);
+      }, 550);
+    } else buzz(12);
     paintBar();
   }
+  var advanceTimer = null;
   function untap(it) {
     var d = doneOf(it);
     if (d <= 0) return;
