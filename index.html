@@ -32,6 +32,10 @@
   --on-qiyam: #FFFFFF;
   --ruqya: #1A5C45;
   --on-ruqya: #FFFFFF;
+  --salah: #9C3D54;
+  --on-salah: #FFFFFF;
+  --nawm: #34495E;
+  --on-nawm: #FFFFFF;
   --accent: var(--morning);
   --on-accent: var(--on-morning);
   --f-ui: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, system-ui, sans-serif;
@@ -71,6 +75,8 @@ body[data-mode="selected"] { --accent: var(--selected); --on-accent: var(--on-se
 body[data-mode="karb"] { --accent: var(--karb); --on-accent: var(--on-karb); }
 body[data-mode="qiyam"] { --accent: var(--qiyam); --on-accent: var(--on-qiyam); }
 body[data-mode="ruqya"] { --accent: var(--ruqya); --on-accent: var(--on-ruqya); }
+body[data-mode="salah"] { --accent: var(--salah); --on-accent: var(--on-salah); }
+body[data-mode="nawm"] { --accent: var(--nawm); --on-accent: var(--on-nawm); }
 
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -88,20 +94,20 @@ button { font: inherit; color: inherit; }
   gap: 6px;
 }
 .seg button {
-  flex: 1 1 calc(33.33% - 6px);
+  flex: 1 1 calc(25% - 6px);
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  min-width: 30%;
-  padding: 6px 8px;
+  min-height: 42px;
+  min-width: 22%;
+  padding: 6px 4px;
   border: 0;
   border-radius: 12px;
   background: color-mix(in srgb, var(--fg) 7%, var(--bg));
   color: var(--fg);
   font-weight: 600;
-  font-size: .92rem;
-  line-height: 1.25;
+  font-size: .86rem;
+  line-height: 1.2;
   text-align: center;
   cursor: pointer;
   touch-action: manipulation;
@@ -447,6 +453,8 @@ button { font: inherit; color: inherit; }
     <div class="seg" role="group" aria-label="أقسام الأذكار">
       <button type="button" id="b-m" aria-pressed="true">الصباح</button>
       <button type="button" id="b-e" aria-pressed="false">المساء</button>
+      <button type="button" id="b-p" aria-pressed="false">بعد الصلاة</button>
+      <button type="button" id="b-n" aria-pressed="false">قبل النوم</button>
       <button type="button" id="b-s" aria-pressed="false">أدعية مختارة</button>
       <button type="button" id="b-k" aria-pressed="false">أدعية الكرب</button>
       <button type="button" id="b-q" aria-pressed="false">قيام الليل</button>
@@ -496,10 +504,12 @@ button { font: inherit; color: inherit; }
     s: "تقبّل الله منك. أتممت الأدعية المختارة بحمد الله.",
     k: "تقبّل الله منك. أتممت أدعية الكرب بحمد الله.",
     q: "تقبّل الله منك. أتممت دعاء قيام الليل بحمد الله.",
-    r: "تقبّل الله منك. أتممت الرقية الشرعية بحمد الله."
+    r: "تقبّل الله منك. أتممت الرقية الشرعية بحمد الله.",
+    p: "تقبّل الله منك. أتممت أذكار ما بعد الصلاة بحمد الله.",
+    n: "تقبّل الله منك. أتممت أذكار النوم بحمد الله. نوم هنيء."
   };
 
-  /* when: b = صباح ومساء، m = الصباح فقط، e = المساء فقط، s/k/q/r أقسام مستقلة. span=day عدّاد واحد لليوم. */
+  /* when: b = صباح ومساء، m = الصباح فقط، e = المساء فقط، s/k/q/r/p/n أقسام مستقلة. span=day عدّاد واحد لليوم. */
   var ITEMS = [
   {
     "id": "kursi",
@@ -942,6 +952,76 @@ button { font: inherit; color: inherit; }
     "note": "يُقال عند النوم، ولقضاء الدين والغنى من الفقر. واللفظ هنا جامع بين روايتين: «السبع» من رواية أحمد والترمذي، و«الفرقان» و«اقض عنا الدين» من لفظ مسلم، ولفظ مسلم «رب السماوات ورب الأرض ورب العرش العظيم»."
   },
   {
+    "id": "p-tasbih",
+    "kind": "d",
+    "when": "p",
+    "count": 10,
+    "title": "تسبيح ١٠",
+    "text": "سُبْحَانَ اللَّهِ",
+    "ref": "الترمذي (٣٧٠٩) وأبو داود (٥٠٦٥) والنسائي وابن ماجه، عن عبد الله بن عمرو رضي الله عنهما",
+    "note": "«خلّتان لا يُحصيهما رجل مسلم إلا دخل الجنة، وهما يسير، ومن يعمل بهما قليل: يسبّح الله في دبر كل صلاة عشرًا، ويحمده عشرًا، ويكبّره عشرًا... فتلك خمسون ومئة باللسان، وألف وخمسمئة في الميزان». قال الترمذي: حسن صحيح."
+  },
+  {
+    "id": "p-tahmid",
+    "kind": "d",
+    "when": "p",
+    "count": 10,
+    "title": "تحميد ١٠",
+    "text": "الْحَمْدُ لِلَّهِ",
+    "ref": "الترمذي (٣٧٠٩) وأبو داود (٥٠٦٥) والنسائي وابن ماجه، عن عبد الله بن عمرو رضي الله عنهما",
+    "note": "يحمد الله عشرًا دبر كل صلاة."
+  },
+  {
+    "id": "p-takbir",
+    "kind": "d",
+    "when": "p",
+    "count": 10,
+    "title": "تكبير ١٠",
+    "text": "اللَّهُ أَكْبَرُ",
+    "ref": "الترمذي (٣٧٠٩) وأبو داود (٥٠٦٥) والنسائي وابن ماجه، عن عبد الله بن عمرو رضي الله عنهما",
+    "note": "يكبّر الله عشرًا دبر كل صلاة. قال عبد الله بن عمرو: فأنا رأيت رسول الله ﷺ يعقدها بيده."
+  },
+  {
+    "id": "n-takbir",
+    "kind": "d",
+    "when": "n",
+    "count": 34,
+    "title": "تكبير ٣٤",
+    "text": "اللَّهُ أَكْبَرُ",
+    "ref": "صحيح البخاري ومسلم، عن علي رضي الله عنه",
+    "note": "علّمه النبي ﷺ عليًّا وفاطمة لما سألته خادمًا: «إذا أخذتما مضاجعكما فكبّرا أربعًا وثلاثين، وسبّحا ثلاثًا وثلاثين، واحمدا ثلاثًا وثلاثين، فهو خير لكما من خادم»."
+  },
+  {
+    "id": "n-tasbih",
+    "kind": "d",
+    "when": "n",
+    "count": 33,
+    "title": "تسبيح ٣٣",
+    "text": "سُبْحَانَ اللَّهِ",
+    "ref": "صحيح البخاري ومسلم، عن علي رضي الله عنه",
+    "note": "يسبّح الله ثلاثًا وثلاثين إذا أخذ مضجعه."
+  },
+  {
+    "id": "n-tahmid",
+    "kind": "d",
+    "when": "n",
+    "count": 33,
+    "title": "تحميد ٣٣",
+    "text": "الْحَمْدُ لِلَّهِ",
+    "ref": "صحيح البخاري ومسلم، عن علي رضي الله عنه",
+    "note": "يحمد الله ثلاثًا وثلاثين إذا أخذ مضجعه."
+  },
+  {
+    "id": "n-samawat",
+    "kind": "d",
+    "when": "n",
+    "count": 1,
+    "title": "اللهم رب السماوات السبع",
+    "text": "اللَّهُمَّ رَبَّ السَّمَوَاتِ السَّبْعِ وَرَبَّ الْعَرْشِ الْعَظِيمِ، رَبَّنَا وَرَبَّ كُلِّ شَيْءٍ، مُنْزِلَ التَّوْرَاةِ وَالْإِنْجِيلِ وَالْفُرْقَانِ، فَالِقَ الْحَبِّ وَالنَّوَى لَا إِلَهَ إِلَّا أَنْتَ أَعُوذُ بِكَ مِنْ شَرِّ كُلِّ شَيْءٍ أَنْتَ آخِذٌ بِنَاصِيَتِهِ، أَنْتَ الْأَوَّلُ لَيْسَ قَبْلَكَ شَيْءٌ وَأَنْتَ الْآخِرُ لَيْسَ بَعْدَكَ شَيْءٌ، وَأَنْتَ الظَّاهِرُ لَيْسَ فَوْقَكَ شَيْءٌ، وَأَنْتَ الْبَاطِنُ لَيْسَ دُونَكَ شَيْءٌ. اقْضِ عَنَّا الدَّيْنَ، وَأَغْنِنَا مِنَ الْفَقْرِ",
+    "ref": "عن أبي هريرة رضي الله عنه: صحيح مسلم (٢٧١٣)، ومسند أحمد والترمذي",
+    "note": "يُقال عند النوم، ولقضاء الدين والغنى من الفقر. واللفظ هنا جامع بين روايتين: «السبع» من رواية أحمد والترمذي، و«الفرقان» و«اقض عنا الدين» من لفظ مسلم، ولفظ مسلم «رب السماوات ورب الأرض ورب العرش العظيم»."
+  },
+  {
     "id": "mukhtara-awzini",
     "kind": "q",
     "when": "s",
@@ -1229,7 +1309,7 @@ button { font: inherit; color: inherit; }
     var d = new Date();
     return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
   }
-  var S = { day: today(), size: 2, auto: true, m: {}, e: {}, s: {}, k: {}, q: {}, r: {}, shared: {} };
+  var S = { day: today(), size: 2, auto: true, m: {}, e: {}, s: {}, k: {}, q: {}, r: {}, p: {}, n: {}, shared: {} };
   try {
     var saved = JSON.parse(localStorage.getItem(KEY) || "null");
     if (saved && typeof saved === "object") {
@@ -1237,7 +1317,7 @@ button { font: inherit; color: inherit; }
       if (typeof saved.auto === "boolean") S.auto = saved.auto;
       if (saved.day === S.day) {
         S.m = saved.m || {}; S.e = saved.e || {}; S.s = saved.s || {};
-        S.k = saved.k || {}; S.q = saved.q || {}; S.r = saved.r || {}; S.shared = saved.shared || {};
+        S.k = saved.k || {}; S.q = saved.q || {}; S.r = saved.r || {}; S.p = saved.p || {}; S.n = saved.n || {}; S.shared = saved.shared || {};
         /* The separate night tab was folded into q. Keep those counts. */
         if (saved.n && typeof saved.n === "object") {
           ["n-layl", "n-witr"].forEach(function (id) {
@@ -1670,14 +1750,14 @@ button { font: inherit; color: inherit; }
 
   function setMode(m, startAt) {
     mode = m;
-    document.body.setAttribute("data-mode", m === "e" ? "evening" : m === "s" ? "selected" : m === "k" ? "karb" : m === "q" ? "qiyam" : m === "r" ? "ruqya" : "morning");
-    ["m", "e", "s", "k", "q", "r"].forEach(function (k) {
+    document.body.setAttribute("data-mode", m === "e" ? "evening" : m === "s" ? "selected" : m === "k" ? "karb" : m === "q" ? "qiyam" : m === "r" ? "ruqya" : m === "p" ? "salah" : m === "n" ? "nawm" : "morning");
+    ["m", "e", "p", "n", "s", "k", "q", "r"].forEach(function (k) {
       document.getElementById("b-" + k).setAttribute("aria-pressed", String(m === k));
     });
     build();
     requestAnimationFrame(function () { go(startAt == null ? firstOpen() : startAt, false); });
   }
-  ["m", "e", "s", "k", "q", "r"].forEach(function (k) {
+  ["m", "e", "p", "n", "s", "k", "q", "r"].forEach(function (k) {
     document.getElementById("b-" + k).addEventListener("click", function () {
       userPicked = true;
       if (mode !== k) setMode(k);
