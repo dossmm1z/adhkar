@@ -193,7 +193,9 @@ button { font: inherit; color: inherit; }
   overflow-wrap: anywhere;
 }
 .text.q { font-family: var(--f-quran); line-height: 2.2; }
-.text .line { unicode-bidi: isolate; }
+.text .line { unicode-bidi: isolate; transition: opacity .2s, color .2s; }
+.text .line.cur { color: var(--accent); font-weight: 700; }
+.text .line.past { opacity: .4; }
 .text .paren {
   unicode-bidi: isolate;
   font-size: .72em;
@@ -952,64 +954,38 @@ button { font: inherit; color: inherit; }
     "note": "يُقال عند النوم، ولقضاء الدين والغنى من الفقر. واللفظ هنا جامع بين روايتين: «السبع» من رواية أحمد والترمذي، و«الفرقان» و«اقض عنا الدين» من لفظ مسلم، ولفظ مسلم «رب السماوات ورب الأرض ورب العرش العظيم»."
   },
   {
-    "id": "p-tasbih",
+    "id": "p-dhikr",
     "kind": "d",
     "when": "p",
-    "count": 10,
-    "title": "تسبيح ١٠",
-    "text": "سُبْحَانَ اللَّهِ",
+    "count": 30,
+    "chip": "١٠ لكل ذكر",
+    "quoteLines": true,
+    "phases": [
+      10,
+      10,
+      10
+    ],
+    "title": "التسبيح والتحميد والتكبير",
+    "text": "سُبْحَانَ اللَّهِ\nالْحَمْدُ لِلَّهِ\nاللَّهُ أَكْبَرُ",
     "ref": "الترمذي (٣٧٠٩) وأبو داود (٥٠٦٥) والنسائي وابن ماجه، عن عبد الله بن عمرو رضي الله عنهما",
-    "note": "«خلّتان لا يُحصيهما رجل مسلم إلا دخل الجنة، وهما يسير، ومن يعمل بهما قليل: يسبّح الله في دبر كل صلاة عشرًا، ويحمده عشرًا، ويكبّره عشرًا... فتلك خمسون ومئة باللسان، وألف وخمسمئة في الميزان». قال الترمذي: حسن صحيح."
+    "note": "«خلّتان لا يُحصيهما رجل مسلم إلا دخل الجنة، وهما يسير، ومن يعمل بهما قليل: يسبّح الله في دبر كل صلاة عشرًا، ويحمده عشرًا، ويكبّره عشرًا... فتلك خمسون ومئة باللسان، وألف وخمسمئة في الميزان». قال الترمذي: حسن صحيح. قال عبد الله بن عمرو: فأنا رأيت رسول الله ﷺ يعقدها بيده."
   },
   {
-    "id": "p-tahmid",
-    "kind": "d",
-    "when": "p",
-    "count": 10,
-    "title": "تحميد ١٠",
-    "text": "الْحَمْدُ لِلَّهِ",
-    "ref": "الترمذي (٣٧٠٩) وأبو داود (٥٠٦٥) والنسائي وابن ماجه، عن عبد الله بن عمرو رضي الله عنهما",
-    "note": "يحمد الله عشرًا دبر كل صلاة."
-  },
-  {
-    "id": "p-takbir",
-    "kind": "d",
-    "when": "p",
-    "count": 10,
-    "title": "تكبير ١٠",
-    "text": "اللَّهُ أَكْبَرُ",
-    "ref": "الترمذي (٣٧٠٩) وأبو داود (٥٠٦٥) والنسائي وابن ماجه، عن عبد الله بن عمرو رضي الله عنهما",
-    "note": "يكبّر الله عشرًا دبر كل صلاة. قال عبد الله بن عمرو: فأنا رأيت رسول الله ﷺ يعقدها بيده."
-  },
-  {
-    "id": "n-takbir",
+    "id": "n-dhikr",
     "kind": "d",
     "when": "n",
-    "count": 34,
-    "title": "تكبير ٣٤",
-    "text": "اللَّهُ أَكْبَرُ",
+    "count": 100,
+    "chip": "٣٤ · ٣٣ · ٣٣",
+    "quoteLines": true,
+    "phases": [
+      34,
+      33,
+      33
+    ],
+    "title": "التكبير والتسبيح والتحميد",
+    "text": "اللَّهُ أَكْبَرُ\nسُبْحَانَ اللَّهِ\nالْحَمْدُ لِلَّهِ",
     "ref": "صحيح البخاري ومسلم، عن علي رضي الله عنه",
     "note": "علّمه النبي ﷺ عليًّا وفاطمة لما سألته خادمًا: «إذا أخذتما مضاجعكما فكبّرا أربعًا وثلاثين، وسبّحا ثلاثًا وثلاثين، واحمدا ثلاثًا وثلاثين، فهو خير لكما من خادم»."
-  },
-  {
-    "id": "n-tasbih",
-    "kind": "d",
-    "when": "n",
-    "count": 33,
-    "title": "تسبيح ٣٣",
-    "text": "سُبْحَانَ اللَّهِ",
-    "ref": "صحيح البخاري ومسلم، عن علي رضي الله عنه",
-    "note": "يسبّح الله ثلاثًا وثلاثين إذا أخذ مضجعه."
-  },
-  {
-    "id": "n-tahmid",
-    "kind": "d",
-    "when": "n",
-    "count": 33,
-    "title": "تحميد ٣٣",
-    "text": "الْحَمْدُ لِلَّهِ",
-    "ref": "صحيح البخاري ومسلم، عن علي رضي الله عنه",
-    "note": "يحمد الله ثلاثًا وثلاثين إذا أخذ مضجعه."
   },
   {
     "id": "n-samawat",
@@ -1466,7 +1442,7 @@ button { font: inherit; color: inherit; }
 
       var head = el("div", "card-head");
       head.appendChild(el("span", "pos", ar(i + 1) + " / " + ar(total)));
-      head.appendChild(el("span", "chip", it.span === "day" ? "مائة مرة في اليوم" : times(it.count)));
+      head.appendChild(el("span", "chip", it.chip || (it.span === "day" ? "مائة مرة في اليوم" : times(it.count))));
       if (it.when === "m" || it.when === "e") head.appendChild(el("span", "only", it.when === "m" ? "للصباح فقط" : "للمساء فقط"));
       card.appendChild(head);
       card.appendChild(el("h2", "", it.title));
@@ -1592,10 +1568,27 @@ button { font: inherit; color: inherit; }
     paintBar();
   }
 
+  /* Multi-phase card (e.g. tasbih 10 then tahmid 10 then takbir 10): one
+     counter walks through the phases; the current line is highlighted. */
+  function phaseOf(it, d) {
+    var acc = 0;
+    for (var k = 0; k < it.phases.length; k++) {
+      if (d < acc + it.phases[k]) return { k: k, left: acc + it.phases[k] - d, of: it.phases[k] };
+      acc += it.phases[k];
+    }
+    return { k: it.phases.length, left: 0, of: 0 };
+  }
   function paint(i) {
     var it = list[i], card = cards[i];
     if (!it || !card) return;
     var d = doneOf(it), fin = d >= it.count;
+    var ph = it.phases ? phaseOf(it, d) : null;
+    if (ph) {
+      card.querySelectorAll(".text .line").forEach(function (ln, idx) {
+        ln.classList.toggle("cur", idx === ph.k);
+        ln.classList.toggle("past", idx < ph.k);
+      });
+    }
     var btn = card.querySelector(".count");
     var lbl = btn.querySelector(".lbl"), num = btn.querySelector(".num");
     card.classList.toggle("done", fin);
@@ -1603,6 +1596,9 @@ button { font: inherit; color: inherit; }
     btn.disabled = fin;
     if (fin) {
       lbl.textContent = ""; lbl.hidden = true; num.textContent = "✓ تمّت";
+    } else if (ph) {
+      var names = rawText(it).split("\n");
+      lbl.hidden = false; lbl.textContent = names[ph.k] + " · المتبقي من " + ar(ph.of); num.textContent = ar(ph.left);
     } else if (it.count === 1) {
       lbl.hidden = false; lbl.textContent = "اضغط بعد القراءة"; num.textContent = "تمّت";
     } else {
@@ -1716,7 +1712,8 @@ button { font: inherit; color: inherit; }
       advanceTimer = setTimeout(function () {
         if (cur === i && list[i] === it) go(i + 1, true);
       }, 550);
-    } else buzz(12);
+    } else if (it.phases && phaseOf(it, d + 1).k !== phaseOf(it, d).k) buzz([12, 40, 12]);
+    else buzz(12);
     paintBar();
   }
   var advanceTimer = null;
